@@ -1,0 +1,6 @@
+@damnoshApi_HostAddress = http://localhost:5256
+
+GET {{damnoshApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
