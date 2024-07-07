@@ -1,4 +1,6 @@
 using damnoshApi.Data;
+using damnoshApi.Interfaces;
+using damnoshApi.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCnn"));
 });
+
+builder.Services.AddScoped<IStockRepository,StockRepository>();
 
 var app = builder.Build();
 

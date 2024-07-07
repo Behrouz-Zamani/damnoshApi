@@ -1,6 +1,8 @@
 using damnoshApi.Data;
 using damnoshApi.Dtos.Stock;
+using damnoshApi.Interfaces;
 using damnoshApi.Mappers;
+using damnoshApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,16 +13,18 @@ namespace damnoshApi.Controllers
     public class StockController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public StockController(ApplicationDBContext context)
+        private readonly IStockRepository _stockRepo;
+        public StockController(ApplicationDBContext context,IStockRepository stockRepo)
         {
             _context = context;
+            _stockRepo=stockRepo;
         }
 
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var stocks =await _context.Stocks.ToListAsync();
+            var stocks =await _stockRepo.GetAllAsync();
 
            var stockDto= stocks.Select(s => s.ToStockDto());
 
@@ -29,7 +33,7 @@ namespace damnoshApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var stock =await _context.Stocks.FindAsync(id);
+            var stock =await _stockRepo.GetByIdAsync(id);
 
             if (stock == null)
             {
@@ -41,26 +45,17 @@ namespace damnoshApi.Controllers
         public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
         {
             var result = stockDto.ToStockFromCreateDto();
-          await  _context.Stocks.AddAsync(result);
-           await _context.SaveChangesAsync();
+            await _stockRepo.CreateAsync(result);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result.ToStockDto());
         }
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
         {
-            var result =await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var result = await _stockRepo.UpdateAsync(id,updateDto);
             if (result == null)
                 return NotFound();
 
-            result.Symbol = updateDto.Symbol;
-            result.CompanyName = updateDto.CompanyName;
-            result.Purchase = updateDto.Purchase;
-            result.LastDiv = updateDto.LastDiv;
-            result.Indestry = updateDto.Indestry;
-            result.MarketCap = updateDto.MarketCap;
-
-            await _context.SaveChangesAsync();
             return Ok(result.ToStockDto());
 
         }
@@ -68,15 +63,14 @@ namespace damnoshApi.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var result =await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var result =await _stockRepo.DeleteAsync(id);
 
             if (result == null)
             {
                 return NotFound();
 
             }
-            _context.Stocks.Remove(result);
-           await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }
