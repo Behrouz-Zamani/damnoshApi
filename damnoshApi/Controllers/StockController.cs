@@ -2,6 +2,7 @@ using damnoshApi.Data;
 using damnoshApi.Dtos.Stock;
 using damnoshApi.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace damnoshApi.Controllers
 {
@@ -17,17 +18,18 @@ namespace damnoshApi.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var stocks = _context.Stocks.ToList()
-            .Select(s => s.ToStockDto());
+            var stocks =await _context.Stocks.ToListAsync();
+
+           var stockDto= stocks.Select(s => s.ToStockDto());
+
             return Ok(stocks);
         }
-
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var stock = _context.Stocks.Find(id);
+            var stock =await _context.Stocks.FindAsync(id);
 
             if (stock == null)
             {
@@ -35,20 +37,19 @@ namespace damnoshApi.Controllers
             }
             return Ok(stock);
         }
-
         [HttpPost]
-        public IActionResult Create([FromBody] CreateStockRequestDto stockDto)
+        public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
         {
             var result = stockDto.ToStockFromCreateDto();
-            _context.Stocks.Add(result);
-            _context.SaveChanges();
+          await  _context.Stocks.AddAsync(result);
+           await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result.ToStockDto());
         }
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
         {
-            var result = _context.Stocks.FirstOrDefault(x => x.Id == id);
+            var result =await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
             if (result == null)
                 return NotFound();
 
@@ -59,16 +60,15 @@ namespace damnoshApi.Controllers
             result.Indestry = updateDto.Indestry;
             result.MarketCap = updateDto.MarketCap;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(result.ToStockDto());
 
         }
-
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var result = _context.Stocks.FirstOrDefault(x => x.Id == id);
+            var result =await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
             if (result == null)
             {
@@ -76,7 +76,7 @@ namespace damnoshApi.Controllers
 
             }
             _context.Stocks.Remove(result);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
             return NoContent();
         }
     }
