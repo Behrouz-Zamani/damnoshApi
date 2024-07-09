@@ -23,14 +23,14 @@ namespace damnoshApi.Repository
         public async Task<Comment?> DeleteAsync(int id)
         {
             var result = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
-            if(result == null)
+            if (result == null)
             {
                 return null;
             }
             _context.Comments.Remove(result);
             await _context.SaveChangesAsync();
             return result;
-            
+
         }
 
         public async Task<List<Comment>> GetAllAsync()
@@ -45,21 +45,21 @@ namespace damnoshApi.Repository
 
         public async Task<Comment?> UpdateAsync(int id, UpdateCommandRepository updateComment)
         {
-            var result=await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
-            if(result== null)
+            var result = await _context.Comments.FindAsync(id);
+            if (result == null)
             {
                 return null;
             }
 
-            result.Content=updateComment.Content;
-            result.Title=updateComment.Title;
-            result.CreatedOn=updateComment.CreatedOn;
-            result.StockId=updateComment.StockId;
-           // result.Stock=updateComment.Stock;
+            result.Content = updateComment.Content;
+            result.Title = updateComment.Title;
+            // result.CreatedOn=updateComment.CreatedOn;
+            // result.StockId=updateComment.StockId;
+            // result.Stock=updateComment.Stock;
 
-           await _context.SaveChangesAsync();
-           return result;
-            
+            await _context.SaveChangesAsync();
+            return result;
+
         }
 
     }

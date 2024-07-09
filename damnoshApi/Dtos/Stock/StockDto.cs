@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using damnoshApi.Dtos.Comment;
 
 namespace damnoshApi.Dtos.Stack
 {
@@ -14,5 +15,6 @@ namespace damnoshApi.Dtos.Stack
         public decimal LastDiv { get; set; }
         public string Indestry { get; set; } = string.Empty;
         public long MarketCap { get; set; }
+        public List<CommentDto>? Comments{get;set;}
     }
 }

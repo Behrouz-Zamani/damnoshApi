@@ -17,27 +17,26 @@ namespace damnoshApi.Mappers
                 StockId = commentModel.StockId
             };
         }
-        public static Comment ToCommentDtoFromCreateDto(this CreateCommentRepository commentModels)
+        public static Comment ToCommentDtoFromCreateDto(this CreateCommentRepository commentModels, int stockId)
         {
             return new Comment
             {
                 
                 Title = commentModels.Title,
                 Content = commentModels.Content,
-                CreatedOn = commentModels.CreatedOn,
-                StockId = commentModels.StockId
+                StockId = stockId
             };
         }
 
-        public static CommentDto ToCommentDtoFromUpdateDto(this Comment updateDto)
+        public static CommentDto ToCommentDtoFromUpdateDto(this UpdateCommandRepository updateDto)
         {
             return new CommentDto
             {
-                Id = updateDto.Id,
+                // Id = updateDto.Id,
                 Title = updateDto.Title,
                 Content = updateDto.Content,
-                CreatedOn = updateDto.CreatedOn,
-                StockId = updateDto.StockId
+                // CreatedOn = updateDto.CreatedOn,
+
             };
         }
     }

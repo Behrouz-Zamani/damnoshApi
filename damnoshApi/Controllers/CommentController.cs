@@ -10,11 +10,12 @@ namespace damnoshApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        // private readonly ApplicationDBContext _context;
         private readonly ICommentRepository _commentRepo;
-        public CommentController(ApplicationDBContext context,ICommentRepository commentRipo)
+        private readonly IStockRepository _stockRepo;
+        public CommentController(ICommentRepository commentRipo,IStockRepository stockRepo)
         {
-            _context = context;
+            _stockRepo = stockRepo;
             _commentRepo = commentRipo;
         }
         
@@ -34,7 +35,7 @@ namespace damnoshApi.Controllers
             {
                 return NotFound();
             }
-                return Ok(result);
+                return Ok(result.ToCommentDto());
         }
 
         [HttpPut]
@@ -45,7 +46,7 @@ namespace damnoshApi.Controllers
             var result = await _commentRepo.UpdateAsync(id,updateDto);
             if (result == null)
             {
-                return NotFound();
+                return NotFound("Comment not found");
             }
 
             return Ok(result.ToCommentDto());
@@ -66,10 +67,16 @@ namespace damnoshApi.Controllers
            return NoContent();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCommentRepository commentDto)
+        [HttpPost("{stockId}")]
+        public async Task<IActionResult> Create([FromRoute] int stockId,[FromBody] CreateCommentRepository commentDto)
         {
-            var result =  commentDto.ToCommentDtoFromCreateDto();
+            if(!await _stockRepo.StockExist(stockId))
+            {
+                return BadRequest("Stock dose not exist");
+            }
+
+
+            var result =  commentDto.ToCommentDtoFromCreateDto(stockId);
             await _commentRepo.CreateAsync(result);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result.ToCommentDto());
 
