@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using damnoshApi.Data;
 using damnoshApi.Dtos.Stock;
 using damnoshApi.Interfaces;

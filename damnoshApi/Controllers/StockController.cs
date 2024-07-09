@@ -2,9 +2,7 @@ using damnoshApi.Data;
 using damnoshApi.Dtos.Stock;
 using damnoshApi.Interfaces;
 using damnoshApi.Mappers;
-using damnoshApi.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace damnoshApi.Controllers
 {
@@ -68,7 +66,6 @@ namespace damnoshApi.Controllers
             if (result == null)
             {
                 return NotFound();
-
             }
 
             return NoContent();
