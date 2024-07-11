@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("damnoshApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0362e2012a0c6f8ed0ddab5e1daac99e7d22491f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+defc0bceae08b0b1e9c4c8e7b29bcc02fad7a304")]
 [assembly: System.Reflection.AssemblyProductAttribute("damnoshApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("damnoshApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
