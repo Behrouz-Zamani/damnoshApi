@@ -41,7 +41,7 @@ builder.Services.AddAuthentication(options => {
     options.DefaultForbidScheme =
     options.DefaultScheme=
     options.DefaultSignInScheme=
-    options.DefaultSignOutScheme=JwtBearerDefaults.AuthenticationScheme
+    options.DefaultSignOutScheme=JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>{
     options.TokenValidationParameters=new TokenValidationParameters
     {
@@ -54,7 +54,7 @@ builder.Services.AddAuthentication(options => {
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         )
     };
-})
+});
 
 builder.Services.AddScoped<IStockRepository,StockRepository>();
 builder.Services.AddScoped<ICommentRepository,CommentRepository>();
@@ -69,6 +69,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
 
