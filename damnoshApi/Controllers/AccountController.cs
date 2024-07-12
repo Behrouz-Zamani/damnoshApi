@@ -8,6 +8,8 @@ using damnoshApi.Interfaces;
 using damnoshApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace damnoshApi.Controllers
 {
@@ -17,12 +19,38 @@ namespace damnoshApi.Controllers
     {
         private readonly UserManager<AddUser> _userManager;
         private readonly ITokenService _tokenService;
-        public AccountController(UserManager<AddUser> userManager,ITokenService tokenService)
+        private readonly SignInManager<AddUser> _singInManager;
+        public AccountController(UserManager<AddUser> userManager,ITokenService tokenService,SignInManager<AddUser> singInManager)
         {
             _userManager = userManager;
             _tokenService=tokenService;
+           _singInManager=singInManager;
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> login(LoginDto loginDto)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.UserName.ToLower());
+            if(user == null) return Unauthorized("Invalid username !");
+            var result = await _singInManager.CheckPasswordSignInAsync(user,loginDto.Password,false);
+
+            if(!result.Succeeded) return Unauthorized("Invalid username or Password not correct");
+
+            return Ok(
+                new NewUserDto
+                {
+                    UserName = user.UserName,
+                    Email=user.Email,
+                    Token=_tokenService.CreateToken(user),
+
+                }
+            );
+
+        }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {

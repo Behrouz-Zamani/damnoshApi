@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using damnoshApi.Interfaces;
 using damnoshApi.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -35,7 +31,7 @@ namespace damnoshApi.Services
                 Subject=new ClaimsIdentity(claims),
                 Expires=DateTime.Now.AddDays(7),
                 SigningCredentials=creds,
-                Issuer=_config["JWT:Issure"],
+                Issuer=_config["JWT:Issuer"],
                 Audience=_config["JWT:Audience"]
             };
 

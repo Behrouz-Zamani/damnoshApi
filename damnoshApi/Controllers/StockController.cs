@@ -2,6 +2,7 @@ using damnoshApi.Data;
 using damnoshApi.Dtos.Stock;
 using damnoshApi.Interfaces;
 using damnoshApi.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace damnoshApi.Controllers
@@ -20,17 +21,20 @@ namespace damnoshApi.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var stocks = await _stockRepo.GetAllAsync();
 
-            var stockDto = stocks.Select(s => s.ToStockDto());
+            var stockDto = stocks.Select(s => s.ToStockDto()).ToList();
 
             return Ok(stocks);
         }
         [HttpGet("{id:int}")]
+                [Authorize]
+
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
