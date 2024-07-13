@@ -8,6 +8,8 @@ namespace damnoshApi.Models
 {
     public class AddUser:IdentityUser
     {
-        public int Risk { get; set; }
+        // public int Risk { get; set; }
+
+        public List<Portfolio> Portfolio {get;set;}=new List<Portfolio>();
     }
 }
