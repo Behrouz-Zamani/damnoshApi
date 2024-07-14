@@ -6,5 +6,6 @@ namespace damnoshApi.Interfaces
     {
         Task<List<Stock>> GetUserPortfolio(AddUser user);
         Task<Portfolio> CreateAsync(Portfolio portfolio);
+        Task<Portfolio> DeletePOrtfolio(AddUser appUser , string symbol);
     }
 }

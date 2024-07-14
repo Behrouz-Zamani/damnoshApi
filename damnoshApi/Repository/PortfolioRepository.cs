@@ -27,6 +27,19 @@ namespace damnoshApi.Repository
 
         }
 
+        public async Task<Portfolio> DeletePOrtfolio(AddUser appUser, string symbol)
+        {
+            var portfolioModel = await _context.Portfolios.FirstOrDefaultAsync(x => x.AppuserId == appUser.Id && x.Stock.Symbol.ToLower() == symbol.ToLower());
+            if(portfolioModel == null)
+            {
+                 return null;
+            }
+
+            _context.Portfolios.Remove(portfolioModel);
+           await _context.SaveChangesAsync();
+            return portfolioModel;
+        }
+
         public async Task<List<Stock>> GetUserPortfolio(AddUser user)
         {
             

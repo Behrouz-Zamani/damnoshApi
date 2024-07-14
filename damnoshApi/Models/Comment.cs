@@ -16,5 +16,8 @@ namespace damnoshApi.Models
         public int? StockId { get; set; }
         //NAVIGATION PROPERTY   
         public Stock? Stock { get; set; }
+
+        public string AppUserId { get; set;}
+        public AddUser AppUser{get; set;}
     }
 }

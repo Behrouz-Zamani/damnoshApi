@@ -64,5 +64,29 @@ namespace damnoshApi.Controllers
                 return Created();
             }
         }
+    
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeletePortfolio(string symbol)
+        {
+            var userName=User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(userName);
+
+            var userPortfolio = await _portfoRipo.GetUserPortfolio(appUser);
+
+            var filteredStock = userPortfolio.Where(s => s.Symbol.ToLower() == symbol.ToLower()).ToList();
+
+            if(filteredStock.Count() ==1 )
+            {
+                await _portfoRipo.DeletePOrtfolio(appUser , symbol);
+            }
+            else
+            {
+                return BadRequest("Stock not in your portfolio");
+            }
+            return Ok();
+        }
+    
     }
+
 }
