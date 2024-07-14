@@ -1,5 +1,6 @@
 using damnoshApi.Extensions;
 using damnoshApi.Interfaces;
+using damnoshApi.Migrations;
 using damnoshApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -33,5 +34,35 @@ namespace damnoshApi.Controllers
             return Ok(userPortfolio);
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddPortfolio(string symbol)
+        {
+            var userName = User.GetUsername();
+            var appUser=await _userManager.FindByNameAsync(userName);
+            var stock = await _stockRepository.GetBySymbolAsync(symbol);
+
+            if(stock == null) return BadRequest("Stock not found!");
+
+            var userPortfolio = await _portfoRipo.GetUserPortfolio(appUser);
+
+            if(userPortfolio.Any(e => e.Symbol.ToLower() == symbol.ToLower())) return BadRequest("Cannot add same stock to portfolio!");
+
+            var portfolioModel = new Portfolio
+            {
+                StockId = stock.Id,
+                AppuserId = appUser.Id
+            };
+
+            await _portfoRipo.CreateAsync(portfolioModel);
+            if(portfolioModel == null)
+            {
+                return StatusCode(500,"Could not create!");
+            }
+            else
+            {
+                return Created();
+            }
+        }
     }
 }
