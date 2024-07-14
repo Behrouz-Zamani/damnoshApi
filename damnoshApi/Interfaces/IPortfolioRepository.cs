@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using damnoshApi.Models;
 
 namespace damnoshApi.Interfaces
 {
     public interface IPortfolioRepository
     {
-        
+        Task<List<Stock>> GetUserPortfolio(AddUser user);
     }
 }
