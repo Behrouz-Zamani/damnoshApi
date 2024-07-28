@@ -41,13 +41,7 @@ namespace damnoshApi.Controllers
             if(!result.Succeeded) return Unauthorized("Invalid username or Password not correct");
 
             return Ok(
-                new NewUserDto
-                {
-                    UserName = user.UserName,
-                    Email=user.Email,
-                    Token=_tokenService.CreateToken(user),
-
-                }
+                new NewUserDto { UserName = user.UserName, Email = user.Email, Token = _tokenService.CreateToken(user), }
             );
 
         }
